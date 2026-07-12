@@ -148,13 +148,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sharmaakshit820@gmail.com'
-EMAIL_HOST_PASSWORD = 'znov saeh dzjm khlk'   # Gmail App Password
+EMAIL_HOST_PASSWORD = ''   # Gmail App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_NAME = 'PlaceMe AI'
 
 # Google Gemini API
-GEMINI_API_KEY = 'AQ.Ab8RN6LxG6_oSnQcF0qi5elg2ijReN_Azzjd32yxDQrZ-S6Igg'
+GEMINI_API_KEY = ''
 
 # Groq API — fallback when Gemini quota is exhausted
 # Key generation link: https://console.groq.com 
-GROQ_API_KEY = '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'   # ← paste your Groq key here
+GROQ_API_KEY = ''   # ← paste your Groq key here
