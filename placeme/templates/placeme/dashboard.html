@@ -1,0 +1,386 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard • Place Me AI</title>
+
+    <link rel="stylesheet" href="{% static 'placeme/css/dashboard.css' %}" />
+    <script src="{% static 'placeme/js/theme_toggle.js' %}" defer></script>
+  </head>
+
+  <body>
+
+    <!-- ── Top bar ─────────────────────────────────────────── -->
+    <header class="topbar">
+
+      <!-- Left: brand -->
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-text">PlaceMe AI</span>
+      </div>
+
+      <nav class="nav-list" aria-label="Primary navigation">
+        <a class="nav-item active" href="{% url 'dashboard' %}">
+          <span class="nav-icon" aria-hidden="true">📃</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a class="nav-item" href="{% url 'coding_practice' %}">
+          <span class="nav-icon" aria-hidden="true">💻</span>
+          <span class="nav-label">Coding Practice</span>
+        </a>
+        <a class="nav-item" href="{% url 'ai_interviews' %}">
+          <span class="nav-icon" aria-hidden="true">🤖</span>
+          <span class="nav-label">AI Interviews</span>
+        </a>
+        <a class="nav-item" href="{% url 'results' %}">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          <span class="nav-label">Results</span>
+        </a>
+        <a class="nav-item" href="{% url 'contact_us' %}">
+          <span class="nav-icon" aria-hidden="true">📲</span>
+          <span class="nav-label">Contact Us</span>
+        </a>
+        <a class="nav-item" href="{% url 'profile' %}">
+          <span class="nav-icon" aria-hidden="true">👤</span>
+          <span class="nav-label">Profile</span>
+        </a>
+      </nav>
+
+      <!-- Right: actions -->
+      <div class="actions">
+        <button
+          type="button"
+          class="theme-toggle"
+          aria-label="Toggle theme"
+          title="Toggle theme"
+        >☾</button>
+
+        <form class="logout-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="btn-logout" type="submit">Logout</button>
+        </form>
+      </div>
+
+    </header>
+
+    <!-- ── Page content ────────────────────────────────────── -->
+    <main class="main-content">
+      <div class="welcome-wrap">
+
+        <div class="welcome-kicker">Dashboard</div>
+
+        <h1 class="welcome-headline">
+          Welcome back, <span class="dual-tone">{{ request.user.username }}</span> 👋
+        </h1>
+
+        <p class="welcome-sub">
+          Ready to sharpen your skills? Pick up where you left off or start something new.
+        </p>
+
+        <div class="quick-cards">
+          <a class="quick-card" href="{% url 'ai_interviews' %}">
+            <span class="quick-card-icon" aria-hidden="true">🤖</span>
+            <span class="quick-card-title">AI Interviews</span>
+            <span class="quick-card-body">Practice a mock interview session with AI-generated questions.</span>
+          </a>
+          <a class="quick-card" href="{% url 'coding_practice' %}">
+            <span class="quick-card-icon" aria-hidden="true">💻</span>
+            <span class="quick-card-title">Coding Practice</span>
+            <span class="quick-card-body">Sharpen your problem-solving with coding challenges.</span>
+          </a>
+          <a class="quick-card" href="{% url 'profile' %}">
+            <span class="quick-card-icon" aria-hidden="true">👤</span>
+            <span class="quick-card-title">Your Profile</span>
+            <span class="quick-card-body">Update your resume details and track your progress.</span>
+          </a>
+        </div>
+
+        <!-- ── PlaceMe Resume tile ───────────────────────── -->
+        <div class="resume-tile">
+
+          <!-- Tile header -->
+          <div class="resume-tile-header">
+            <div class="resume-tile-title">📄 PlaceMe Resume</div>
+            <a class="btn-update-resume" href="{% url 'profile' %}">✏️ Update Resume</a>
+          </div>
+
+          <!-- Resume paper -->
+          <div class="resume-paper">
+
+            <!-- ── Name & contact ──────────────────────── -->
+            <div class="rp-header">
+              <div class="rp-name">{{ p.full_name|default:request.user.username }}</div>
+              {% if p.headline %}<div class="rp-headline">{{ p.headline }}</div>{% endif %}
+
+              <div class="rp-contact-row">
+                {% if request.user.email %}
+                <span class="rp-contact-item">✉ {{ request.user.email }}</span>
+                {% endif %}
+                {% if p.phone %}
+                <span class="rp-contact-item">📞 {{ p.phone }}</span>
+                {% endif %}
+                {% if p.location_city or p.location_country %}
+                <span class="rp-contact-item">📍 {{ p.location_city }}{% if p.location_city and p.location_country %}, {% endif %}{{ p.location_country }}</span>
+                {% endif %}
+                {% if p.linkedin %}
+                <a class="rp-contact-link" href="{{ p.linkedin }}" target="_blank" rel="noopener">🔗 LinkedIn</a>
+                {% endif %}
+                {% if p.github %}
+                <a class="rp-contact-link" href="{{ p.github }}" target="_blank" rel="noopener">🐙 GitHub</a>
+                {% endif %}
+                {% if p.portfolio %}
+                <a class="rp-contact-link" href="{{ p.portfolio }}" target="_blank" rel="noopener">🌐 Portfolio</a>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- ── Skills ─────────────────────────────── -->
+            <div class="rp-section">
+              <div class="rp-section-title">Skills</div>
+              <div class="rp-section-body">
+                {% if p.skills_list %}
+                  <div class="rp-skill-chips">
+                    {% for skill in p.skills_list %}
+                    <span class="rp-skill-chip">{{ skill }}</span>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <span class="rp-empty">No skills added yet.</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- ── Education ──────────────────────────── -->
+            <div class="rp-section">
+              <div class="rp-section-title">Education</div>
+              <div class="rp-section-body">
+                {% if educations %}
+                  {% for edu in educations %}
+                  <div class="rp-entry">
+                    <div class="rp-entry-top">
+                      <span class="rp-entry-title">{{ edu.institution }}</span>
+                      <span class="rp-entry-period">
+                        {% if edu.from_year %}{{ edu.from_year }}{% endif %}
+                        {% if edu.to_year %} – {{ edu.to_year }}{% endif %}
+                      </span>
+                    </div>
+                    <div class="rp-entry-sub">
+                      {{ edu.get_degree_display }}
+                      {% if edu.location %} · {{ edu.location }}{% endif %}
+                      {% if edu.grade %} · {{ edu.grade }}{% endif %}
+                    </div>
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <span class="rp-empty">No education added yet.</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- ── Projects ───────────────────────────── -->
+            <div class="rp-section">
+              <div class="rp-section-title">Projects</div>
+              <div class="rp-section-body">
+                {% if projects %}
+                  {% for proj in projects %}
+                  <div class="rp-entry">
+                    <div class="rp-entry-top">
+                      <span class="rp-entry-title">{{ proj.title }}</span>
+                      {% if proj.completion_month or proj.completion_year %}
+                      <span class="rp-entry-period">{{ proj.completion_month }} {{ proj.completion_year }}</span>
+                      {% endif %}
+                    </div>
+                    {% if proj.skills_used %}
+                    <div class="rp-entry-skills">{{ proj.skills_used }}</div>
+                    {% endif %}
+                    {% if proj.description %}
+                    <div class="rp-entry-desc">{{ proj.description }}</div>
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <span class="rp-empty">No projects added yet.</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- ── Internships ────────────────────────── -->
+            <div class="rp-section">
+              <div class="rp-section-title">Internship Experience</div>
+              <div class="rp-section-body">
+                {% if internships %}
+                  {% for intern in internships %}
+                  <div class="rp-entry">
+                    <div class="rp-entry-top">
+                      <span class="rp-entry-title">{{ intern.role }} <span class="rp-entry-at"> @{{ intern.company }}</span></span>
+                      <span class="rp-entry-period">{{ intern.duration }}</span>
+                    </div>
+                    {% if intern.location %}
+                    <div class="rp-entry-sub">📍 {{ intern.location }}</div>
+                    {% endif %}
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <span class="rp-empty">No internship experience added yet.</span>
+                {% endif %}
+              </div>
+            </div>
+
+          </div><!-- /resume-paper -->
+        </div><!-- /resume-tile -->
+
+        <!-- ── Share Your Experience tile ──────────────────── -->
+        <div class="experience-tile" id="experience-tile">
+
+          <!-- Left info panel -->
+          <div class="exp-info-panel">
+            <div class="exp-kicker">Community</div>
+            <h2 class="exp-title">Share your <span class="dual-tone">experience</span></h2>
+            <p class="exp-body">
+              Helped you land a job? Improved your answers? Let others know.
+              Your review appears on the landing page and inspires the next candidate.
+            </p>
+
+            <div class="exp-detail">
+              <span class="exp-detail-icon" aria-hidden="true">🌟</span>
+              <div>
+                <div class="exp-detail-label">Shown publicly</div>
+                <div class="exp-detail-value">Latest 3 reviews appear on the landing page.</div>
+              </div>
+            </div>
+
+            <div class="exp-detail">
+              <span class="exp-detail-icon" aria-hidden="true">✍️</span>
+              <div>
+                <div class="exp-detail-label">Your words</div>
+                <div class="exp-detail-value">Write freely — honest feedback helps everyone.</div>
+              </div>
+            </div>
+
+            <div class="exp-detail">
+              <span class="exp-detail-icon" aria-hidden="true">⚡</span>
+              <div>
+                <div class="exp-detail-label">Instant</div>
+                <div class="exp-detail-value">Goes live immediately after submission.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right form card -->
+          <div class="exp-form-col">
+            <div class="exp-glass-card" id="exp-card">
+
+              <!-- Success state (hidden by default) -->
+              <div class="exp-success" id="exp-success" style="display:none;">
+                <div class="exp-success-icon">✅</div>
+                <div class="exp-success-title">Thank you!</div>
+                <div class="exp-success-body">Your experience has been shared and is now live on the landing page.</div>
+                <button type="button" class="exp-btn-another" id="exp-btn-another">Share another</button>
+              </div>
+
+              <!-- Form (visible by default) -->
+              <div id="exp-form-wrap">
+                <div class="exp-form-title">Your Experience ✨</div>
+                <div class="exp-field-error" id="exp-error" style="display:none;"></div>
+
+                <div class="exp-field">
+                  <label class="exp-label" for="exp-name">Your Name</label>
+                  <input class="exp-input" type="text" id="exp-name"
+                    placeholder="Enter your name.."
+                    value="{{ request.user.get_full_name|default:request.user.username }}" />
+                </div>
+
+                <div class="exp-field">
+                  <label class="exp-label" for="exp-role">Your Role / Field <span class="exp-label-opt">(optional)</span></label>
+                  <input class="exp-input" type="text" id="exp-role"
+                    placeholder="e.g. Software Engineering, Data Analyst…" />
+                </div>
+
+                <div class="exp-field">
+                  <label class="exp-label" for="exp-message">Your Experience</label>
+                  <textarea class="exp-input exp-textarea" id="exp-message" rows="4"
+                    placeholder="How did PlaceMe AI help you? What improved?"></textarea>
+                </div>
+
+                <button type="button" class="exp-btn-submit" id="exp-btn-submit">
+                  Share Experience
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /experience-tile -->
+
+      </div>
+    </main>
+
+    <script>
+    document.getElementById("exp-btn-submit").addEventListener("click", function () {
+      const name    = document.getElementById("exp-name").value.trim();
+      const role    = document.getElementById("exp-role").value.trim();
+      const message = document.getElementById("exp-message").value.trim();
+      const errBox  = document.getElementById("exp-error");
+
+      errBox.style.display = "none";
+
+      if (!name) { errBox.textContent = "Please enter your name."; errBox.style.display = "block"; return; }
+      if (!message) { errBox.textContent = "Please share your experience."; errBox.style.display = "block"; return; }
+
+      const btn = this;
+      btn.disabled = true;
+      btn.textContent = "Sharing…";
+
+      const fd = new FormData();
+      fd.append("name",    name);
+      fd.append("role",    role);
+      fd.append("message", message);
+      fd.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+      fetch("{% url 'submit_review' %}", { method: "POST", body: fd })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById("exp-form-wrap").style.display = "none";
+            document.getElementById("exp-success").style.display   = "flex";
+          } else {
+            errBox.textContent = data.error || "Something went wrong.";
+            errBox.style.display = "block";
+            btn.disabled = false;
+            btn.textContent = "Share Experience";
+          }
+        })
+        .catch(() => {
+          errBox.textContent = "Network error. Please try again.";
+          errBox.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Share Experience";
+        });
+    });
+
+    document.getElementById("exp-btn-another").addEventListener("click", function () {
+      document.getElementById("exp-success").style.display   = "none";
+      document.getElementById("exp-form-wrap").style.display = "block";
+      document.getElementById("exp-message").value = "";
+      document.getElementById("exp-role").value    = "";
+      document.getElementById("exp-btn-submit").disabled    = false;
+      document.getElementById("exp-btn-submit").textContent = "Share Experience";
+    });
+    </script>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <span class="footer-dot"></span>
+        PlaceMe AI
+      </div>
+      <div class="footer-copy">© 2026 PlaceMe AI · Built for interview prep</div>
+      <div class="footer-links">
+        <a class="footer-link" href="{% url 'contact_us' %}">Contact Us</a>
+        <a class="footer-link" href="{% url 'dashboard' %}">Dashboard</a>
+      </div>
+    </footer>
+
+  </body>
+</html>

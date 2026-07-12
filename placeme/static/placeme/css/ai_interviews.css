@@ -1,0 +1,387 @@
+/* ============================================================
+   ai_interviews.css — PlaceMe AI Interviews page
+   Self-contained. No dependency on any other stylesheet.
+   ============================================================ */
+
+/* --- Reset -------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* --- Theme -------------------------------------------------- */
+:root { --bg-top: #5e696f; --bg-bottom: #0a0a0c; }
+:root.theme-light { --bg-top: #9f9fd8; --bg-bottom: #3a3a45; }
+
+/* --- Base --------------------------------------------------- */
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #fff;
+  background-color: var(--bg-bottom);
+  background-image: radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+a { text-decoration: none; }
+
+/* --- Topbar ------------------------------------------------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 80px; background: transparent;
+}
+.brand { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+.logo { width: 14px; height: 14px; background: #888; border-radius: 50%; display: inline-block; box-shadow: inset 0 2px 4px rgba(255,255,255,.4); }
+.brand-text { font-weight: 700; font-size: 1.1rem; letter-spacing: -.02em; color: #fff; }
+
+.nav-list {
+  display: flex; align-items: center; gap: .25rem;
+  position: absolute; left: 50%; transform: translateX(-50%); top: 1.1rem;
+  background: rgba(255,255,255,.07); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 2rem;
+  padding: .3rem .4rem; box-shadow: 0 4px 24px rgba(0,0,0,.25);
+}
+.nav-item {
+  display: flex; align-items: center; gap: .45rem; padding: .45rem .9rem;
+  border-radius: 2rem; border: 1px solid transparent;
+  color: rgba(255,255,255,.6); font-size: .88rem; font-weight: 500; white-space: nowrap;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.92); border-color: rgba(255,255,255,.1); }
+.nav-item.active { background: rgba(255,255,255,.11); color: #fff; border-color: rgba(255,255,255,.14); font-weight: 600; }
+.nav-icon { font-size: 1rem; line-height: 1; }
+
+.actions { display: flex; align-items: center; gap: .85rem; flex-shrink: 0; }
+.theme-toggle {
+  background: transparent; border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.95);
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .2s, background .2s, border-color .2s; font-size: 1rem;
+}
+.theme-toggle:hover { transform: translateY(-1px); background: rgba(255,255,255,.05); }
+:root.theme-light .theme-toggle { border-color: rgba(11,11,15,.18); color: rgba(11,11,15,.92); background: rgba(11,11,15,.03); }
+
+.logout-form { margin: 0; }
+.btn-logout {
+  padding: .5rem 1.1rem; border-radius: 2rem; font-weight: 500; font-size: .88rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .2s, box-shadow .2s;
+  background: rgba(255,255,255,.03); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.18); box-shadow: 0 0 18px rgba(255,255,255,.12); color: #fff;
+}
+.btn-logout:hover { background: rgba(255,255,255,.06); box-shadow: 0 0 24px rgba(255,255,255,.18); }
+:root.theme-light .btn-logout { background: rgba(11,11,15,.04); border-color: rgba(11,11,15,.18); box-shadow: 0 0 18px rgba(11,11,15,.1); }
+:root.theme-light .btn-logout:hover { background: rgba(11,11,15,.07); box-shadow: 0 0 24px rgba(11,11,15,.16); }
+
+/* --- Page layout ------------------------------------------- */
+.main-content { padding-top: 80px; }
+.page-wrap { max-width: 860px; margin: 0 auto; padding: 3rem 2.5rem 7rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+/* --- Page heading ------------------------------------------ */
+.page-kicker { font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 800; color: rgba(255,255,255,.4); margin-bottom: .6rem; }
+.page-title { font-size: 2.4rem; font-weight: 900; letter-spacing: -.04em; line-height: 1.1; color: #fff; margin-bottom: .65rem; }
+.dual-tone {
+  background: linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.5) 55%, rgba(255,255,255,1) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.page-sub { font-size: 1rem; color: rgba(255,255,255,.48); max-width: 520px; }
+
+/* --- Success banner ---------------------------------------- */
+.banner-success {
+  display: flex; align-items: center; gap: .75rem;
+  background: rgba(80,255,150,.08); border: 1px solid rgba(80,255,150,.22);
+  border-radius: 1rem; padding: .9rem 1.2rem; color: #86efac; font-size: .95rem; font-weight: 500;
+}
+
+/* --- Error banner ------------------------------------------ */
+.banner-error {
+  display: flex; align-items: center; gap: .75rem;
+  background: rgba(255,80,80,.08); border: 1px solid rgba(255,80,80,.25);
+  border-radius: 1rem; padding: .9rem 1.2rem; color: #fca5a5; font-size: .95rem; font-weight: 500;
+}
+
+/* --- Setup tile -------------------------------------------- */
+.setup-tile {
+  background: linear-gradient(180deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.02) 100%);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 1.8rem;
+  padding: 2.4rem 2.6rem;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+/* --- Step block -------------------------------------------- */
+.step-block { padding: 1.6rem 0; }
+.step-block:first-child { padding-top: 0; }
+
+.step-label {
+  display: flex; align-items: center; gap: .85rem;
+  margin-bottom: 1.5rem;
+}
+.step-num {
+  font-size: .7rem; font-weight: 900; letter-spacing: .1em;
+  color: rgba(255,255,255,.35);
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: .5rem; padding: .25rem .6rem;
+  flex-shrink: 0;
+}
+.step-title { font-size: 1rem; font-weight: 800; color: #fff; letter-spacing: -.01em; }
+
+/* --- Divider between steps --------------------------------- */
+.step-divider { height: 1px; background: rgba(255,255,255,.07); margin: 0; }
+
+/* --- Fields grid ------------------------------------------- */
+.fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.4rem; }
+.col-span-2 { grid-column: span 2; }
+
+.field { display: flex; flex-direction: column; gap: .45rem; }
+.label { font-size: .88rem; color: rgba(255,255,255,.7); font-weight: 600; }
+.label-opt { font-size: .76rem; font-weight: 400; color: rgba(255,255,255,.32); }
+
+.input {
+  width: 100%; border-radius: .9rem; padding: .8rem 1rem;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  color: #fff; outline: none; font-size: .92rem; font-family: inherit;
+  backdrop-filter: blur(6px); transition: border-color .2s, box-shadow .2s, transform .18s;
+}
+.input::placeholder { color: rgba(255,255,255,.28); }
+.input:focus { border-color: rgba(255,255,255,.22); box-shadow: 0 0 0 3px rgba(255,255,255,.06); transform: translateY(-1px); }
+.textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+/* --- Select (same look as input) --------------------------- */
+.select {
+  width: 100%; border-radius: .9rem; padding: .8rem 1rem;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  color: #fff; outline: none; font-size: .92rem; font-family: inherit;
+  cursor: pointer; appearance: none; -webkit-appearance: none;
+  backdrop-filter: blur(6px); transition: border-color .2s, box-shadow .2s, transform .18s;
+}
+.select:focus { border-color: rgba(255,255,255,.22); box-shadow: 0 0 0 3px rgba(255,255,255,.06); transform: translateY(-1px); }
+.select option { background: #1a1a2e; color: #fff; }
+
+/* --- Skill chip input row ---------------------------------- */
+.skill-input-row { display: flex; gap: .7rem; align-items: center; }
+.skill-input-row .input { flex: 1; }
+
+.btn-add-skill {
+  padding: .6rem 1.1rem; border-radius: .9rem;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.85); font-size: .85rem; font-weight: 600;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+  transition: background .18s, color .18s;
+}
+.btn-add-skill:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+.skill-chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .6rem; min-height: .5rem; }
+.skill-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16);
+  border-radius: 2rem; padding: .28rem .8rem;
+  font-size: .8rem; font-weight: 600; color: #fff;
+}
+.chip-remove { background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer; font-size: .95rem; line-height: 1; padding: 0; transition: color .15s; }
+.chip-remove:hover { color: #fca5a5; }
+
+/* --- Option chips (radio groups) --------------------------- */
+.option-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.option-chip {
+  display: inline-flex; align-items: center;
+  padding: .55rem 1.15rem; border-radius: 2rem;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.58); font-size: .88rem; font-weight: 500;
+  cursor: pointer; user-select: none;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.option-chip:hover { background: rgba(255,255,255,.08); color: rgba(255,255,255,.9); }
+.option-chip input[type="radio"] { display: none; }
+.option-chip.selected {
+  background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.28);
+  color: #fff; font-weight: 700;
+  box-shadow: 0 0 12px rgba(255,255,255,.08);
+}
+
+/* --- Count chips (question number) ------------------------- */
+.count-chips { display: flex; gap: .6rem; flex-wrap: wrap; }
+.count-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 58px; height: 58px; border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.55); font-size: 1.1rem; font-weight: 800;
+  cursor: pointer; user-select: none;
+  transition: background .18s, border-color .18s, color .18s, transform .18s;
+}
+.count-chip:hover { background: rgba(255,255,255,.09); color: rgba(255,255,255,.9); transform: translateY(-2px); }
+.count-chip input[type="radio"] { display: none; }
+.count-chip.selected {
+  background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.30);
+  color: #fff; box-shadow: 0 0 16px rgba(255,255,255,.1); transform: translateY(-2px);
+}
+
+/* --- Upload zone ------------------------------------------- */
+.upload-zone {
+  border: 2px dashed rgba(255,255,255,.18); border-radius: 1rem;
+  padding: 1.6rem; text-align: center; cursor: pointer;
+  transition: border-color .2s, background .2s; position: relative;
+}
+.upload-zone:hover { border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.03); }
+.upload-zone.dragover { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.05); }
+.upload-zone input[type="file"] { display: none; }
+.upload-icon { font-size: 1.8rem; margin-bottom: .4rem; line-height: 1; }
+.upload-label { font-size: .9rem; font-weight: 600; color: rgba(255,255,255,.72); margin-bottom: .2rem; }
+.upload-hint { font-size: .76rem; color: rgba(255,255,255,.35); }
+
+/* --- Current file row -------------------------------------- */
+.current-file {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .7rem 1rem; margin-top: .7rem;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: .85rem; gap: .75rem;
+}
+.current-file-name { font-size: .85rem; color: rgba(255,255,255,.72); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-remove-file {
+  background: rgba(255,80,80,.12); border: 1px solid rgba(255,80,80,.25);
+  color: #fca5a5; border-radius: .6rem; padding: .32rem .72rem;
+  font-size: .76rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background .2s; font-family: inherit;
+}
+.btn-remove-file:hover { background: rgba(255,80,80,.22); }
+
+/* --- Action bar -------------------------------------------- */
+.action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+  padding-top: 2rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+
+.action-row-top {
+  display: flex;
+  gap: .85rem;
+  justify-content: center;
+}
+
+.action-row-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-save-prefs {
+  padding: .75rem 1.8rem; border-radius: 1rem;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+  color: #fff; font-size: .92rem; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: background .2s, box-shadow .2s;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 16px rgba(255,255,255,.08);
+}
+.btn-save-prefs:hover { background: rgba(255,255,255,.13); box-shadow: 0 0 24px rgba(255,255,255,.14); }
+
+.btn-reset-prefs {
+  padding: .75rem 1.6rem; border-radius: 1rem;
+  background: transparent; border: 1px solid rgba(255,80,80,.3);
+  color: #fca5a5; font-size: .88rem; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: background .2s, border-color .2s;
+}
+.btn-reset-prefs:hover { background: rgba(255,80,80,.1); border-color: rgba(255,80,80,.5); }
+
+.btn-start {
+  padding: .85rem 2.4rem; border-radius: 1rem;
+  background: #ffffff; color: #000;
+  border: none; font-size: 1rem; font-weight: 800;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 0 32px rgba(255,255,255,.25);
+  transition: opacity .2s, box-shadow .2s, transform .18s;
+  letter-spacing: -.01em;
+}
+.btn-start:hover { opacity: .88; box-shadow: 0 0 48px rgba(255,255,255,.35); transform: translateY(-1px); }
+
+/* --- Responsive -------------------------------------------- */
+@media (max-width: 900px) {
+  .fields-grid { grid-template-columns: 1fr; }
+  .col-span-2 { grid-column: span 1; }
+  .page-wrap { padding: 2.5rem 1.25rem 5rem; }
+  .setup-tile { padding: 1.8rem 1.4rem; }
+  .action-row-top { flex-direction: column; }
+  .btn-save-prefs, .btn-reset-prefs, .btn-start { width: 100%; justify-content: center; text-align: center; }
+  .page-title { font-size: 1.8rem; }
+}
+@media (max-width: 1100px) {
+  .nav-label { display: none; }
+  .nav-item { padding: .5rem .65rem; gap: 0; }
+  .nav-icon { font-size: 1.15rem; }
+}
+@media (max-width: 700px) {
+  .topbar { padding: 0 1.25rem; }
+  .brand-text { display: none; }
+}
+
+/* ── Site Footer ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.01em;
+}
+
+.footer-brand .footer-dot {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+}
+
+.footer-copy {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.30);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.40);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.footer-link:hover {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+@media (max-width: 700px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    gap: 0.5rem;
+  }
+}

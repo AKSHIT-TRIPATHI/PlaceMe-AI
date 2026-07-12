@@ -1,0 +1,398 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Live Interview • Place Me AI</title>
+    <link rel="stylesheet" href="{% static 'placeme/css/interview_chat.css' %}" />
+    <script src="{% static 'placeme/js/theme_toggle.js' %}" defer></script>
+  </head>
+  <body>
+
+    <!-- ── Topbar ──────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-text">PlaceMe AI</span>
+      </div>
+
+      <div class="topbar-meta">
+        <!-- Countdown timer -->
+        <div class="timer-wrap" aria-live="polite">
+          <span class="timer-icon">⏱</span>
+          <span class="timer-display" id="timer">--:--</span>
+        </div>
+
+        <!-- Q count -->
+        <span class="progress-badge" id="progress-badge">
+          Q {{ session.current_question_count }} / {{ session.number_of_questions }}
+        </span>
+
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">☾</button>
+      </div>
+    </header>
+
+    <!-- ── Chat layout ─────────────────────────────────────── -->
+    <div class="chat-layout">
+
+      <!-- Session tags -->
+      <div class="session-info" aria-label="Session details">
+        {% if session.target_roles %}
+        <span class="session-tag">🎯 {{ session.target_roles }}</span>
+        {% endif %}
+        <span class="session-tag">{{ session.get_interview_preference_display }}</span>
+        <span class="session-tag">{{ session.get_interviewer_tone_display }} tone</span>
+        <span class="session-tag">{{ session.get_question_depth_display }}</span>
+        <span class="session-tag">{{ session.number_of_questions }} questions</span>
+      </div>
+
+      <!-- Finished banner — two variants, one shown at a time -->
+      <!-- (banners removed — replaced by full-screen modal below) -->
+
+      <!-- Messages -->
+      <div class="chat-messages" id="chat-messages" role="log" aria-label="Interview conversation">
+        {% for msg in display_history %}
+        <div class="msg {% if msg.role == 'model' %}ai{% else %}user{% endif %}">
+          <div class="msg-avatar" aria-hidden="true">
+            {% if msg.role == 'model' %}🤖{% else %}🧑{% endif %}
+          </div>
+          <div class="msg-bubble">{{ msg.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Input bar -->
+      <div class="input-bar" id="input-bar">
+        <textarea
+          class="chat-input"
+          id="chat-input"
+          placeholder="Type your answer and press Enter or click Send…"
+          rows="1"
+          aria-label="Your answer"
+        ></textarea>
+        <button class="btn-send" id="btn-send" title="Send answer" aria-label="Send">➤</button>
+      </div>
+
+      <!-- Submit early button -->
+      <div class="finish-bar">
+        <button class="btn-finish" id="btn-finish" type="button">
+          ✅ Submit Interview Early
+        </button>
+      </div>
+
+    </div><!-- /chat-layout -->
+
+    <!-- ── Result Modal (full-screen overlay) ──────────── -->
+    <div class="result-overlay" id="result-overlay" role="dialog" aria-modal="true" aria-label="Interview Results">
+      <div class="result-modal" id="result-modal">
+
+        <!-- Countdown ring shown for 3s before modal content appears -->
+        <div class="modal-countdown" id="modal-countdown">
+          <div class="countdown-ring">
+            <svg viewBox="0 0 60 60">
+              <circle class="ring-bg" cx="30" cy="30" r="26"/>
+              <circle class="ring-fill" id="ring-fill" cx="30" cy="30" r="26"/>
+            </svg>
+            <span class="countdown-num" id="countdown-num">3</span>
+          </div>
+          <div class="countdown-label">Preparing your results…</div>
+        </div>
+
+        <!-- Actual result content (hidden until countdown ends) -->
+        <div class="modal-content" id="modal-content" style="display:none;">
+
+          <div class="modal-header" id="modal-header-text">
+            ✅ Interview Complete!
+          </div>
+
+          <!-- Score circle -->
+          <div class="modal-score-wrap">
+            <div class="modal-score-circle" id="modal-score-circle">—</div>
+            <div class="modal-score-lbl">Overall Score</div>
+          </div>
+
+          <!-- Feedback sections -->
+          <div class="modal-feedback" id="modal-feedback"></div>
+
+          <!-- Action buttons -->
+          <div class="modal-actions">
+            <a href="{% url 'dashboard' %}" class="modal-btn modal-btn-ghost">← Back to Dashboard</a>
+            <a href="{% url 'results' %}" class="modal-btn modal-btn-primary">📊 Check Results</a>
+          </div>
+
+        </div><!-- /modal-content -->
+      </div><!-- /result-modal -->
+    </div><!-- /result-overlay -->
+
+    <script>
+    // ── Config ─────────────────────────────────────────────────────────────
+    const SESSION_ID    = {{ session.id }};
+    const MSG_URL       = "{% url 'messages_api' session.id %}";
+    const CSRF_TOKEN    = "{{ csrf_token }}";
+    const TOTAL_SECONDS = {{ total_seconds }};
+    let   qCount        = {{ session.current_question_count }};
+    const qTotal        = {{ session.number_of_questions }};
+
+    // ── DOM refs ───────────────────────────────────────────────────────────
+    const chatBox     = document.getElementById("chat-messages");
+    const inputEl     = document.getElementById("chat-input");
+    const sendBtn     = document.getElementById("btn-send");
+    const finishBtn   = document.getElementById("btn-finish");
+    const timerEl     = document.getElementById("timer");
+    const progressEl  = document.getElementById("progress-badge");
+    const bannerNormal = null; // replaced by modal
+    const bannerEarly  = null; // replaced by modal
+    const inputBar    = document.getElementById("input-bar");
+    let   isFinished  = {{ session.is_active|yesno:"false,true" }};
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function scrollBottom() {
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendMsg(role, text) {
+      const wrap = document.createElement("div");
+      wrap.className = `msg ${role === "model" ? "ai" : "user"}`;
+      wrap.innerHTML = `
+        <div class="msg-avatar" aria-hidden="true">${role === "model" ? "🤖" : "🧑"}</div>
+        <div class="msg-bubble">${text.replace(/\n/g, "<br>")}</div>`;
+      chatBox.appendChild(wrap);
+      scrollBottom();
+    }
+
+    function showTyping() {
+      const wrap = document.createElement("div");
+      wrap.className = "msg ai";
+      wrap.id = "typing";
+      wrap.innerHTML = `
+        <div class="msg-avatar" aria-hidden="true">🤖</div>
+        <div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+      chatBox.appendChild(wrap);
+      scrollBottom();
+      return wrap;
+    }
+
+    function removeTyping() {
+      const el = document.getElementById("typing");
+      if (el) el.remove();
+    }
+
+    function markFinished(early = false, score = null, feedback = null) {
+      isFinished = true;
+      inputBar.style.display  = "none";
+      finishBtn.style.display = "none";
+      clearInterval(timerInterval);
+      timerEl.textContent = "00:00";
+
+      // Show the overlay immediately
+      const overlay       = document.getElementById("result-overlay");
+      const countdown     = document.getElementById("modal-countdown");
+      const content       = document.getElementById("modal-content");
+      const countdownNum  = document.getElementById("countdown-num");
+      const ringFill      = document.getElementById("ring-fill");
+      const headerText    = document.getElementById("modal-header-text");
+      const scoreCircle   = document.getElementById("modal-score-circle");
+      const feedbackEl    = document.getElementById("modal-feedback");
+
+      overlay.classList.add("visible");
+
+      // 3-second SVG countdown
+      const circumference = 2 * Math.PI * 26; // r=26
+      ringFill.style.strokeDasharray  = circumference;
+      ringFill.style.strokeDashoffset = 0;
+
+      let sec = 3;
+      countdownNum.textContent = sec;
+
+      const tick = setInterval(() => {
+        sec--;
+        countdownNum.textContent = Math.max(sec, 0);
+        // Shrink ring proportionally
+        const progress = (3 - sec) / 3;
+        ringFill.style.strokeDashoffset = circumference * progress;
+
+        if (sec <= 0) {
+          clearInterval(tick);
+
+          // Swap countdown for content
+          countdown.style.display = "none";
+          content.style.display   = "flex";
+
+          // Set header text
+          headerText.textContent = early
+            ? "✅ Interview Submitted Early!"
+            : "✅ Interview Complete!";
+
+          // Fill score circle
+          if (score !== null && score !== undefined) {
+            scoreCircle.textContent = score + "/100";
+            if      (score >= 75) scoreCircle.style.borderColor = "#86efac";
+            else if (score >= 50) scoreCircle.style.borderColor = "#fde68a";
+            else                  scoreCircle.style.borderColor = "#fca5a5";
+          } else {
+            scoreCircle.textContent = "—";
+          }
+
+          // Fill feedback
+          if (feedback) {
+            feedbackEl.innerHTML = `
+              <div class="mfb-item">
+                <div class="mfb-label">🧠 Technical Knowledge</div>
+                <div class="mfb-text">${feedback.tech || "—"}</div>
+              </div>
+              <div class="mfb-item">
+                <div class="mfb-label">💻 Coding Areas to Practise</div>
+                <div class="mfb-text">${feedback.coding || "—"}</div>
+              </div>
+              <div class="mfb-item">
+                <div class="mfb-label">📝 Grammar & Communication</div>
+                <div class="mfb-text">${feedback.grammar || "—"}</div>
+              </div>`;
+          } else {
+            feedbackEl.innerHTML = `<div class="mfb-item" style="text-align:center;color:rgba(255,255,255,.4);">Results will appear on your Results page shortly.</div>`;
+          }
+        }
+      }, 1000);
+    }
+
+    function updateProgress() {
+      progressEl.textContent = `Q ${qCount} / ${qTotal}`;
+    }
+
+    // ── Countdown timer ────────────────────────────────────────────────────
+    let remaining = TOTAL_SECONDS;
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+    }
+
+    timerEl.textContent = formatTime(remaining);
+
+    const timerInterval = setInterval(() => {
+      if (isFinished) { clearInterval(timerInterval); return; }
+      remaining--;
+      timerEl.textContent = formatTime(remaining);
+      if (remaining <= 60) timerEl.classList.add("urgent");
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        // Auto-submit
+        sendMessage("[TIME_UP] The interview time has expired. Please wrap up.", true);
+      }
+    }, 1000);
+
+    // ── Send message ───────────────────────────────────────────────────────
+    async function sendMessage(text, isAutoSubmit = false, isEarlySubmit = false) {
+      if (isFinished) return;
+      if (!text.trim() && !isAutoSubmit) return;
+
+      if (!isAutoSubmit) {
+        appendMsg("user", text);
+        inputEl.value = "";
+        inputEl.style.height = "auto";
+      }
+
+      sendBtn.disabled   = true;
+      finishBtn.disabled = true;
+      const typing = showTyping();
+
+      try {
+        const payload = isAutoSubmit
+          ? { message: "Please wrap up the interview as time has expired." }
+          : { message: text };
+
+        const res  = await fetch(MSG_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type":  "application/json",
+            "X-CSRFToken":   CSRF_TOKEN,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        removeTyping();
+        const data = await res.json();
+
+        if (data.error) {
+          appendMsg("model", `⚠ ${data.error}`);
+        } else {
+          if (data.message) appendMsg("model", data.message);
+          if (!isAutoSubmit && data.message) {
+            qCount++;
+            updateProgress();
+          }
+          if (data.is_finished) {
+            markFinished(isEarlySubmit, data.score, data.feedback);
+            return;
+          }
+        }
+      } catch (err) {
+        removeTyping();
+        appendMsg("model", "⚠ Network error — please check your connection.");
+      }
+
+      sendBtn.disabled   = false;
+      finishBtn.disabled = false;
+      inputEl.focus();
+    }
+
+    // ── Event listeners ────────────────────────────────────────────────────
+    sendBtn.addEventListener("click", () => {
+      sendMessage(inputEl.value.trim());
+    });
+
+    inputEl.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(inputEl.value.trim());
+      }
+    });
+
+    // Auto-resize textarea
+    inputEl.addEventListener("input", () => {
+      inputEl.style.height = "auto";
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+    });
+
+    finishBtn.addEventListener("click", () => {
+      if (confirm("Submit your interview now? This cannot be undone.")) {
+        // Disable input immediately so user can't keep typing
+        inputBar.style.display  = "none";
+        finishBtn.style.display = "none";
+        isFinished = true;
+        clearInterval(timerInterval);
+
+        // Show the countdown overlay right away
+        const overlay = document.getElementById("result-overlay");
+        overlay.classList.add("visible");
+
+        // Fire wrap-up to backend — wait for score/feedback in response
+        fetch(MSG_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF_TOKEN },
+          body: JSON.stringify({ message: "The candidate has submitted the interview early. Please give a brief closing message." }),
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.message) appendMsg("model", data.message);
+            // Now trigger the actual modal with score + feedback
+            isFinished = false; // temporarily reset so markFinished runs cleanly
+            markFinished(true, data.score ?? null, data.feedback ?? null);
+          })
+          .catch(() => {
+            isFinished = false;
+            markFinished(true, null, null);
+          });
+      }
+    });
+
+    // ── Init ───────────────────────────────────────────────────────────────
+    scrollBottom();
+    if (!isFinished) inputEl.focus();
+    else markFinished(false, {{ session.score|default:"null" }}, {{ session.feedback|default:"{}" |safe }});
+    </script>
+
+  </body>
+</html>
