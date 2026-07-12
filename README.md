@@ -1,6 +1,6 @@
 # PlaceMe AI
 
-> AI-powered interview preparation platform — practice mock interviews, get scored, track progress, and sharpen coding skills.
+> AI-powered interview preparation platform — practice chat based interviews, get scored, track progress, and sharpen coding skills.
 
 PlaceMe AI is a full-stack Django web application built as a final capstone project. It helps job seekers prepare for technical and behavioural interviews through AI-generated resume-aware questions, real-time feedback, performance scoring, and an in-browser coding practice environment.
 
