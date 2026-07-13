@@ -321,6 +321,7 @@ GEMINI_API_KEY    = os.environ.get('GEMINI_API_KEY')
 GROQ_API_KEY      = os.environ.get('GROQ_API_KEY')
 EMAIL_HOST_USER   = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+set DEBUG = True (for running locally)
 ```
 
 ---
