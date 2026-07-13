@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%x@rtzp=ri^*25-r&@f4onj+fe-gz9$iaoyd42yn&i1#a8l%&1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -148,13 +148,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sharmaakshit820@gmail.com'
-EMAIL_HOST_PASSWORD = ''   # Gmail App Password
+EMAIL_HOST_PASSWORD = 'KEY_1'   # Gmail App Password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_NAME = 'PlaceMe AI'
 
 # Google Gemini API
-GEMINI_API_KEY = ''
+GEMINI_API_KEY = 'KEY_2'
 
 # Groq API — fallback when Gemini quota is exhausted
 # Key generation link: https://console.groq.com 
-GROQ_API_KEY = ''   # ← paste your Groq key here
+GROQ_API_KEY = 'KEY_3'   # ← paste your Groq key here
