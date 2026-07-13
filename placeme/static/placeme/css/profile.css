@@ -1,0 +1,428 @@
+/* ============================================================
+   profile.css — PlaceMe AI Profile page  (self-contained)
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --bg-top: #5e696f; --bg-bottom: #0a0a0c; }
+:root.theme-light { --bg-top: #9f9fd8; --bg-bottom: #3a3a45; }
+
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #fff;
+  background-color: var(--bg-bottom);
+  background-image: radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
+  line-height: 1.5; min-height: 100vh;
+}
+a { text-decoration: none; }
+
+/* ── Topbar ─────────────────────────────────────────────── */
+.topbar {
+  position: fixed; top:0; left:0; right:0; z-index:1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 2.5rem; height: 80px; background: transparent;
+}
+.brand { display:flex; align-items:center; gap:.75rem; flex-shrink:0; }
+.logo { width:14px; height:14px; background:#888; border-radius:50%; display:inline-block; box-shadow:inset 0 2px 4px rgba(255,255,255,.4); }
+.brand-text { font-weight:700; font-size:1.1rem; letter-spacing:-.02em; color:#fff; }
+
+.nav-list {
+  display:flex; align-items:center; gap:.25rem;
+  position:absolute; left:50%; transform:translateX(-50%); top:1.1rem;
+  background:rgba(255,255,255,.07); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.12); border-radius:2rem; padding:.3rem .4rem;
+  box-shadow:0 4px 24px rgba(0,0,0,.25);
+}
+.nav-item {
+  display:flex; align-items:center; gap:.45rem; padding:.45rem .9rem;
+  border-radius:2rem; border:1px solid transparent;
+  color:rgba(255,255,255,.6); font-size:.88rem; font-weight:500; white-space:nowrap;
+  transition:background .18s,color .18s,border-color .18s;
+}
+.nav-item:hover { background:rgba(255,255,255,.07); color:rgba(255,255,255,.92); border-color:rgba(255,255,255,.1); }
+.nav-item.active { background:rgba(255,255,255,.11); color:#fff; border-color:rgba(255,255,255,.14); font-weight:600; }
+.nav-icon { font-size:1rem; line-height:1; }
+
+.actions { display:flex; align-items:center; gap:.85rem; flex-shrink:0; }
+.theme-toggle {
+  background:transparent; border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.95);
+  width:38px; height:38px; border-radius:50%; cursor:pointer;
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:transform .2s,background .2s,border-color .2s; font-size:1rem;
+}
+.theme-toggle:hover { transform:translateY(-1px); background:rgba(255,255,255,.05); }
+:root.theme-light .theme-toggle { border-color:rgba(11,11,15,.18); color:rgba(11,11,15,.92); background:rgba(11,11,15,.03); }
+
+.logout-form { margin:0; }
+.btn-logout {
+  padding:.5rem 1.1rem; border-radius:2rem; font-weight:500; font-size:.88rem; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:background .2s,box-shadow .2s;
+  background:rgba(255,255,255,.03); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.18); box-shadow:0 0 18px rgba(255,255,255,.12); color:#fff;
+}
+.btn-logout:hover { background:rgba(255,255,255,.06); box-shadow:0 0 24px rgba(255,255,255,.18); }
+:root.theme-light .btn-logout { background:rgba(11,11,15,.04); border-color:rgba(11,11,15,.18); box-shadow:0 0 18px rgba(11,11,15,.1); }
+:root.theme-light .btn-logout:hover { background:rgba(11,11,15,.07); box-shadow:0 0 24px rgba(11,11,15,.16); }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.main-content { padding-top: 80px; }
+.page-wrap { max-width:980px; margin:0 auto; padding:3.5rem 2.5rem 7rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+/* Give the main form the same column gap so cards inside it are spaced */
+#profile-form { display:flex; flex-direction:column; gap:1.4rem; }
+
+/* ── Section card ───────────────────────────────────────── */
+.section-card {
+  background:linear-gradient(180deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.02) 100%);
+  border:1px solid rgba(255,255,255,.12); border-radius:1.6rem; padding:2rem 2.2rem;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 16px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12);
+  margin-bottom: 0;
+}
+.section-header {
+  display:flex; align-items:center; gap:.6rem;
+  margin-bottom:1.6rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,.07);
+}
+.section-icon { font-size:1.2rem; line-height:1; }
+.section-title { font-size:1.05rem; font-weight:800; letter-spacing:-.01em; color:#fff; }
+
+/* ── Form grid ──────────────────────────────────────────── */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem 1.5rem; }
+.form-grid.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+.col-span-2 { grid-column:span 2; }
+
+.field { display:flex; flex-direction:column; gap:.45rem; }
+.label { font-size:.88rem; color:rgba(255,255,255,.7); font-weight:600; display:flex; align-items:center; gap:.4rem; }
+.label-optional { font-size:.76rem; font-weight:400; color:rgba(255,255,255,.32); }
+
+.input, .select, .textarea {
+  width:100%; border-radius:.9rem; padding:.8rem 1rem;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+  color:#fff; outline:none; font-size:.92rem; font-family:inherit;
+  backdrop-filter:blur(6px); transition:border-color .2s,box-shadow .2s,transform .18s;
+}
+.input::placeholder, .textarea::placeholder { color:rgba(255,255,255,.28); }
+.input:focus, .select:focus, .textarea:focus {
+  border-color:rgba(255,255,255,.22); box-shadow:0 0 0 3px rgba(255,255,255,.06); transform:translateY(-1px);
+}
+.select { cursor:pointer; appearance:none; -webkit-appearance:none; }
+.select option { background:#1a1a2e; color:#fff; }
+.textarea { resize:vertical; min-height:90px; line-height:1.6; }
+
+/* ── Avatar ─────────────────────────────────────────────── */
+.avatar-row { display:flex; align-items:center; gap:1.5rem; margin-bottom:1.4rem; }
+.avatar-preview { width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); flex-shrink:0; }
+.avatar-placeholder { width:80px; height:80px; border-radius:50%; border:2px dashed rgba(255,255,255,.22); background:rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center; font-size:1.8rem; flex-shrink:0; }
+.avatar-info { display:flex; flex-direction:column; gap:.35rem; }
+.avatar-name { font-size:1.1rem; font-weight:800; color:#fff; letter-spacing:-.02em; }
+.avatar-username { font-size:.88rem; color:rgba(255,255,255,.45); }
+
+/* ── Upload zone ────────────────────────────────────────── */
+.upload-zone {
+  border:2px dashed rgba(255,255,255,.18); border-radius:1rem; padding:1.6rem;
+  text-align:center; cursor:pointer; transition:border-color .2s,background .2s; position:relative;
+}
+.upload-zone:hover { border-color:rgba(255,255,255,.35); background:rgba(255,255,255,.03); }
+.upload-zone.dragover { border-color:rgba(255,255,255,.55); background:rgba(255,255,255,.05); }
+.upload-zone input[type="file"] { display:none; }
+.upload-icon { font-size:2rem; margin-bottom:.5rem; line-height:1; }
+.upload-label { font-size:.92rem; font-weight:600; color:rgba(255,255,255,.75); margin-bottom:.25rem; }
+.upload-hint { font-size:.78rem; color:rgba(255,255,255,.35); }
+
+/* ── Current file row ───────────────────────────────────── */
+.current-file { display:flex; align-items:center; justify-content:space-between; padding:.75rem 1rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:.85rem; margin-top:.75rem; gap:.75rem; }
+.current-file-name { font-size:.88rem; color:rgba(255,255,255,.75); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.btn-delete-file { background:rgba(255,80,80,.12); border:1px solid rgba(255,80,80,.25); color:#fca5a5; border-radius:.6rem; padding:.35rem .75rem; font-size:.78rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .2s; font-family:inherit; }
+.btn-delete-file:hover { background:rgba(255,80,80,.22); }
+
+/* ── Skills chips ───────────────────────────────────────── */
+.skill-input-row { display:flex; gap:.75rem; align-items:center; margin-bottom:1rem; }
+.skill-input-row .input { flex:1; }
+
+.skill-chips { display:flex; flex-wrap:wrap; gap:.5rem; min-height:1rem; }
+
+.skill-chip {
+  display:inline-flex; align-items:center; gap:.35rem;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
+  border-radius:2rem; padding:.35rem .85rem;
+  font-size:.82rem; font-weight:600; color:#fff;
+}
+.chip-remove {
+  background:none; border:none; color:rgba(255,255,255,.5); cursor:pointer;
+  font-size:1rem; line-height:1; padding:0; transition:color .15s;
+}
+.chip-remove:hover { color:#fca5a5; }
+
+/* ── Interview type chips ───────────────────────────────── */
+.chip-group { display:flex; flex-wrap:wrap; gap:.5rem; }
+.chip-label {
+  display:inline-flex; align-items:center; padding:.45rem 1rem; border-radius:2rem;
+  border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.6); font-size:.85rem; font-weight:500;
+  cursor:pointer; transition:background .18s,border-color .18s,color .18s; user-select:none;
+}
+.chip-label:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.9); }
+.chip-label input[type="radio"] { display:none; }
+.chip-label.selected, .chip-label:has(input:checked) { background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.28); color:#fff; font-weight:600; }
+
+/* ── Add buttons ────────────────────────────────────────── */
+.btn-add {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.5rem 1.1rem; border-radius:2rem; border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.05); color:rgba(255,255,255,.85);
+  font-size:.88rem; font-weight:600; cursor:pointer; font-family:inherit;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.btn-add:hover { background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.35); }
+.btn-add-section { margin-top:1rem; }
+
+/* ── Info tiles (education / project / internship) ──────── */
+.info-tile {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:1rem;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+  border-radius:1.1rem; padding:1.1rem 1.3rem; margin-bottom:.85rem;
+}
+.tile-main { flex:1; }
+.tile-title { font-size:1rem; font-weight:700; color:#fff; margin-bottom:.45rem; }
+.tile-at { font-weight:400; color:rgba(255,255,255,.55); }
+.tile-meta { display:flex; flex-wrap:wrap; gap:.5rem .85rem; align-items:center; margin-bottom:.4rem; }
+.tile-badge {
+  display:inline-flex; align-items:center;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
+  border-radius:2rem; padding:.2rem .75rem; font-size:.78rem; font-weight:700; color:#fff;
+}
+.tile-badge-alt { background:rgba(100,200,120,.12); border-color:rgba(100,200,120,.25); color:#86efac; }
+.tile-meta-text { font-size:.82rem; color:rgba(255,255,255,.5); }
+.tile-desc { font-size:.88rem; color:rgba(255,255,255,.55); margin-top:.4rem; line-height:1.55; }
+.tile-delete-form { flex-shrink:0; }
+
+/* ── Inline add-form (collapsed panel) ──────────────────── */
+.inline-form {
+  margin-top:1.2rem; padding:1.5rem;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1);
+  border-radius:1.2rem;
+}
+.inline-form-actions { display:flex; gap:.75rem; align-items:center; margin-top:1.1rem; }
+.btn-cancel {
+  background:transparent; border:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.6);
+  border-radius:.8rem; padding:.6rem 1.3rem; font-size:.88rem; font-weight:500;
+  cursor:pointer; font-family:inherit; transition:background .2s,color .2s;
+}
+.btn-cancel:hover { background:rgba(255,255,255,.06); color:#fff; }
+
+/* ── Save / success ─────────────────────────────────────── */
+.save-bar { display:flex; justify-content:flex-end; padding-top:.5rem; }
+.btn-save {
+  padding:.85rem 2.8rem; border-radius:1rem; font-weight:700; font-size:1rem; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  transition:opacity .2s,box-shadow .2s; font-family:inherit;
+  background:#fff; color:#000; border:none; box-shadow:0 0 28px rgba(255,255,255,.2);
+}
+.btn-save:hover { opacity:.88; box-shadow:0 0 40px rgba(255,255,255,.3); }
+
+.banner-success {
+  display:flex; align-items:center; gap:.75rem;
+  background:rgba(80,255,150,.08); border:1px solid rgba(80,255,150,.22);
+  border-radius:1rem; padding:.9rem 1.2rem; color:#86efac; font-size:.95rem; font-weight:500;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width:900px) {
+  .form-grid, .form-grid.cols-3 { grid-template-columns:1fr; }
+  .col-span-2 { grid-column:span 1; }
+  .page-wrap { padding:3rem 1.25rem 6rem; }
+}
+@media (max-width:1100px) {
+  .nav-label { display:none; }
+  .nav-item { padding:.5rem .65rem; gap:0; }
+  .nav-icon { font-size:1.15rem; }
+}
+@media (max-width:700px) {
+  .topbar { padding:0 1.25rem; }
+  .brand-text { display:none; }
+  .skill-input-row { flex-direction:column; align-items:stretch; }
+}
+
+/* ── Combined professional card ─────────────────────────── */
+.combined-card {
+  padding: 1.8rem 2.2rem 2.2rem;
+}
+
+/* Sub-section tab strip */
+.sub-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1.4rem 0 0;
+  padding: 0.3rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 1rem;
+  flex-wrap: wrap;
+}
+
+.sub-tab {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.6rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,0.50);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.sub-tab:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.85);
+}
+
+.sub-tab.active {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.18);
+  color: #ffffff;
+}
+
+/* Sub-section content panels */
+.sub-section {
+  display: none;
+  padding-top: 1.8rem;
+}
+
+.sub-section.active {
+  display: block;
+}
+
+.sub-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.3rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.sub-section-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.sub-section-hint {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+}
+
+@media (max-width: 700px) {
+  .sub-tabs { gap: 0.2rem; }
+  .sub-tab  { min-width: 80px; font-size: 0.78rem; padding: 0.5rem 0.6rem; }
+}
+
+/* ── Tile action buttons (edit + delete together) ────────── */
+.tile-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.btn-edit-tile {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+
+.btn-edit-tile:hover,
+.btn-edit-tile.active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+/* Edit form gets a slightly different left-border tint to distinguish from add */
+.edit-form {
+  border-left: 3px solid rgba(255, 255, 255, 0.18);
+  margin-bottom: 0.85rem;
+}
+
+/* ── Site Footer ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.01em;
+}
+
+.footer-brand .footer-dot {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+}
+
+.footer-copy {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.30);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.40);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.footer-link:hover {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+@media (max-width: 700px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    gap: 0.5rem;
+  }
+}

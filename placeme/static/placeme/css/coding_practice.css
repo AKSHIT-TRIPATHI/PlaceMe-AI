@@ -1,0 +1,327 @@
+/* ============================================================
+   coding_practice.css — PlaceMe AI Coding Practice page
+   Self-contained. No dependency on any other stylesheet.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { --bg-top: #5e696f; --bg-bottom: #0a0a0c; }
+:root.theme-light { --bg-top: #9f9fd8; --bg-bottom: #3a3a45; }
+
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #fff;
+  background-color: var(--bg-bottom);
+  background-image: radial-gradient(ellipse 80% 60% at 50% 0%, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  background-attachment: fixed;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow: hidden; /* let inner panels scroll */
+}
+a { text-decoration: none; }
+
+/* ── Topbar ─────────────────────────────────────────────── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 68px; background: transparent;
+}
+.brand { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+.logo { width: 14px; height: 14px; background: #888; border-radius: 50%; display: inline-block; box-shadow: inset 0 2px 4px rgba(255,255,255,.4); }
+.brand-text { font-weight: 700; font-size: 1.05rem; letter-spacing: -.02em; color: #fff; }
+
+.nav-list {
+  display: flex; align-items: center; gap: .25rem;
+  position: absolute; left: 50%; transform: translateX(-50%); top: 1rem;
+  background: rgba(255,255,255,.07); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 2rem;
+  padding: .28rem .4rem; box-shadow: 0 4px 24px rgba(0,0,0,.25);
+}
+.nav-item {
+  display: flex; align-items: center; gap: .4rem; padding: .4rem .8rem;
+  border-radius: 2rem; border: 1px solid transparent;
+  color: rgba(255,255,255,.6); font-size: .84rem; font-weight: 500; white-space: nowrap;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.nav-item:hover { background: rgba(255,255,255,.07); color: rgba(255,255,255,.92); border-color: rgba(255,255,255,.1); }
+.nav-item.active { background: rgba(255,255,255,.11); color: #fff; border-color: rgba(255,255,255,.14); font-weight: 600; }
+.nav-icon { font-size: .95rem; line-height: 1; }
+
+.actions { display: flex; align-items: center; gap: .85rem; flex-shrink: 0; }
+.theme-toggle {
+  background: transparent; border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.95);
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .2s, background .2s; font-size: .95rem;
+}
+.theme-toggle:hover { transform: translateY(-1px); background: rgba(255,255,255,.05); }
+:root.theme-light .theme-toggle { border-color: rgba(11,11,15,.18); color: rgba(11,11,15,.92); background: rgba(11,11,15,.03); }
+
+.logout-form { margin: 0; }
+.btn-logout {
+  padding: .45rem 1rem; border-radius: 2rem; font-weight: 500; font-size: .84rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .2s, box-shadow .2s;
+  background: rgba(255,255,255,.03); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.18); box-shadow: 0 0 18px rgba(255,255,255,.12); color: #fff;
+}
+.btn-logout:hover { background: rgba(255,255,255,.06); box-shadow: 0 0 24px rgba(255,255,255,.18); }
+:root.theme-light .btn-logout { background: rgba(11,11,15,.04); border-color: rgba(11,11,15,.18); box-shadow: 0 0 18px rgba(11,11,15,.1); }
+:root.theme-light .btn-logout:hover { background: rgba(11,11,15,.07); }
+
+/* ── Main layout ────────────────────────────────────────── */
+.main-content {
+  padding-top: 68px;
+  height: 100vh;
+  display: flex;
+}
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: calc(100vh - 68px);
+  gap: 0;
+}
+
+/* ── Editor panel ───────────────────────────────────────── */
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.25);
+  overflow: hidden;
+}
+
+/* Toolbar */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem 1rem;
+  background: rgba(255,255,255,.04);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+  gap: .75rem;
+}
+
+.toolbar-left { display: flex; align-items: center; gap: .6rem; }
+.toolbar-right { display: flex; align-items: center; gap: .6rem; }
+
+/* Language select */
+.lang-select {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: .7rem;
+  color: #fff;
+  font-size: .85rem;
+  font-family: inherit;
+  padding: .4rem .75rem;
+  cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  outline: none;
+  transition: border-color .18s, background .18s;
+}
+.lang-select:focus { border-color: rgba(255,255,255,.28); background: rgba(255,255,255,.09); }
+.lang-select option { background: #1a1a2e; color: #fff; }
+
+/* Clear button */
+.btn-clear {
+  background: transparent; border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.5); border-radius: .6rem;
+  padding: .38rem .75rem; font-size: .78rem; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.btn-clear:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.85); border-color: rgba(255,255,255,.22); }
+
+/* Run button */
+.btn-run {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .45rem 1.2rem; border-radius: .8rem;
+  background: #fff; color: #000;
+  border: none; font-size: .88rem; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 0 20px rgba(255,255,255,.2);
+  transition: opacity .2s, box-shadow .2s, transform .15s;
+}
+.btn-run:hover { opacity: .88; box-shadow: 0 0 30px rgba(255,255,255,.3); transform: translateY(-1px); }
+.btn-run:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.run-icon { font-size: .8rem; }
+
+/* Code editor area */
+.editor-wrap {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: rgba(0,0,0,.3);
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", "Courier New", monospace;
+  font-size: .88rem;
+  line-height: 1.65;
+}
+
+.line-numbers {
+  min-width: 44px;
+  padding: .9rem .5rem .9rem 0;
+  text-align: right;
+  color: rgba(255,255,255,.2);
+  background: rgba(255,255,255,.02);
+  border-right: 1px solid rgba(255,255,255,.06);
+  user-select: none;
+  font-size: .82rem;
+  line-height: 1.65;
+  overflow: hidden;
+  white-space: pre;
+  flex-shrink: 0;
+}
+
+.code-editor {
+  flex: 1;
+  padding: .9rem 1rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255,255,255,.92);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  resize: none;
+  overflow: auto;
+  tab-size: 4;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+.code-editor::placeholder { color: rgba(255,255,255,.2); }
+.code-editor::-webkit-scrollbar { width: 6px; height: 6px; }
+.code-editor::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 3px; }
+
+/* Stdin */
+.stdin-wrap {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,.07);
+  background: rgba(0,0,0,.2);
+}
+.stdin-label {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .45rem 1rem;
+  font-size: .76rem; font-weight: 700; color: rgba(255,255,255,.80);
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.stdin-hint { font-weight: 400; font-style: italic; text-transform: none; color: rgba(255,255,255,.55); }
+.stdin-area {
+  width: 100%; padding: .5rem 1rem .75rem;
+  background: transparent; border: none; outline: none;
+  color: rgba(255,255,255,.75); resize: none;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  font-size: .82rem; line-height: 1.55;
+}
+.stdin-area::placeholder { color: rgba(255,255,255,.45); }
+
+/* ── Output panel ───────────────────────────────────────── */
+.output-panel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0,0,0,.18);
+  overflow: hidden;
+}
+
+.output-header {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .6rem 1rem;
+  background: rgba(255,255,255,.04);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.output-title {
+  font-size: .82rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .08em; color: rgba(255,255,255,.55);
+}
+
+/* Status badges */
+.status-badge {
+  font-size: .72rem; font-weight: 700; border-radius: 2rem;
+  padding: .18rem .65rem; letter-spacing: .04em;
+}
+.badge-success { background: rgba(80,255,150,.12); border: 1px solid rgba(80,255,150,.28); color: #86efac; }
+.badge-error   { background: rgba(255,80,80,.12);  border: 1px solid rgba(255,80,80,.28);  color: #fca5a5; }
+
+.btn-copy-output {
+  margin-left: auto;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.6); border-radius: .55rem;
+  padding: .25rem .65rem; font-size: .76rem; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  display: inline-flex; align-items: center; gap: .3rem;
+  transition: background .18s, color .18s;
+}
+.btn-copy-output:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+/* Loading */
+.output-loading {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: .85rem;
+  color: rgba(255,255,255,.45); font-size: .9rem;
+}
+.spinner {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,.1);
+  border-top-color: rgba(255,255,255,.7);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Output body */
+.output-body {
+  flex: 1; overflow-y: auto; padding: .75rem 1rem;
+  display: flex; flex-direction: column; gap: .75rem;
+}
+.output-body::-webkit-scrollbar { width: 5px; }
+.output-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 3px; }
+
+/* Empty state */
+.output-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 100%; gap: .75rem;
+  color: rgba(255,255,255,.22); padding: 3rem 0;
+}
+.output-empty-icon { font-size: 2.5rem; opacity: .3; }
+.output-empty-text { font-size: .88rem; }
+
+/* Output sections */
+.output-section { display: flex; flex-direction: column; gap: .4rem; }
+.output-section-label {
+  font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .08em; padding: .22rem .65rem; border-radius: .4rem; width: fit-content;
+}
+.label-success { background: rgba(80,255,150,.1);  color: #86efac; }
+.label-error   { background: rgba(255,80,80,.1);   color: #fca5a5; }
+
+.output-pre {
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  font-size: .82rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
+  padding: .85rem 1rem; border-radius: .75rem;
+}
+.pre-success { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.85); }
+.pre-error   { background: rgba(255,80,80,.05);   border: 1px solid rgba(255,80,80,.18);  color: #fca5a5; }
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .nav-label { display: none; }
+  .nav-item  { padding: .42rem .6rem; gap: 0; }
+  .nav-icon  { font-size: 1.1rem; }
+}
+
+@media (max-width: 900px) {
+  body { overflow: auto; }
+  .editor-layout { grid-template-columns: 1fr; height: auto; }
+  .editor-panel  { height: 55vh; border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .output-panel  { height: 45vh; }
+  .main-content  { height: auto; }
+}
+
+@media (max-width: 700px) {
+  .topbar     { padding: 0 1rem; }
+  .brand-text { display: none; }
+}
