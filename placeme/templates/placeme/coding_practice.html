@@ -1,0 +1,363 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Coding Practice • Place Me AI</title>
+    <link rel="stylesheet" href="{% static 'placeme/css/coding_practice.css' %}" />
+    <script src="{% static 'placeme/js/theme_toggle.js' %}" defer></script>
+  </head>
+  <body>
+
+    <!-- ── Topbar ──────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <span class="brand-text">PlaceMe AI</span>
+      </div>
+      <nav class="nav-list" aria-label="Primary navigation">
+        <a class="nav-item" href="{% url 'dashboard' %}"><span class="nav-icon">📃</span><span class="nav-label">Dashboard</span></a>
+        <a class="nav-item active" href="{% url 'coding_practice' %}"><span class="nav-icon">💻</span><span class="nav-label">Coding Practice</span></a>
+        <a class="nav-item" href="{% url 'ai_interviews' %}"><span class="nav-icon">🤖</span><span class="nav-label">AI Interviews</span></a>
+        <a class="nav-item" href="{% url 'results' %}"><span class="nav-icon">📊</span><span class="nav-label">Results</span></a>
+        <a class="nav-item" href="{% url 'contact_us' %}"><span class="nav-icon">📲</span><span class="nav-label">Contact Us</span></a>
+        <a class="nav-item" href="{% url 'profile' %}"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
+      </nav>
+      <div class="actions">
+        <button type="button" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">☾</button>
+        <form class="logout-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="btn-logout" type="submit">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    <!-- ── Page ────────────────────────────────────────────── -->
+    <main class="main-content">
+      <div class="editor-layout">
+
+        <!-- ── Left panel: editor ────────────────────────── -->
+        <div class="editor-panel">
+
+          <!-- Toolbar -->
+          <div class="editor-toolbar">
+            <div class="toolbar-left">
+              <select class="lang-select" id="lang-select" aria-label="Language">
+                <option value="python">🐍 Python 3</option>
+                <option value="cpp">⚙️ C++</option>
+                <option value="c">🔧 C</option>
+                <option value="java">☕ Java</option>
+                <option value="javascript">🟡 JavaScript</option>
+                <option value="typescript">🔷 TypeScript</option>
+                <option value="rust">🦀 Rust</option>
+                <option value="go">🐹 Go</option>
+                <option value="csharp">🟣 C#</option>
+                <option value="php">🐘 PHP</option>
+                <option value="ruby">💎 Ruby</option>
+                <option value="haskell">λ Haskell</option>
+                <option value="lua">🌙 Lua</option>
+                <option value="perl">🐪 Perl</option>
+                <option value="r">📊 R</option>
+              </select>
+            </div>
+
+            <div class="toolbar-right">
+              <button class="btn-clear" id="btn-clear" type="button" title="Clear editor">🗑 Clear</button>
+              <button class="btn-run" id="btn-run" type="button">
+                <span class="run-icon">▶</span>
+                <span class="run-label">Run Code</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Code editor textarea -->
+          <div class="editor-wrap">
+            <div class="line-numbers" id="line-numbers" aria-hidden="true">1</div>
+            <textarea
+              class="code-editor"
+              id="code-editor"
+              spellcheck="false"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="off"
+              aria-label="Code editor"
+              placeholder="# Write your code here…"
+            ></textarea>
+          </div>
+
+          <!-- Stdin -->
+          <div class="stdin-wrap">
+            <div class="stdin-label">
+              <span>📥 Standard Input (stdin)</span>
+              <span class="stdin-hint">optional — provide input your program reads</span>
+            </div>
+            <textarea
+              class="stdin-area"
+              id="stdin-area"
+              spellcheck="false"
+              placeholder="Enter input here (one value per line)…"
+              rows="3"
+            ></textarea>
+          </div>
+
+        </div><!-- /editor-panel -->
+
+        <!-- ── Right panel: output ───────────────────────── -->
+        <div class="output-panel">
+
+          <!-- Output header -->
+          <div class="output-header">
+            <span class="output-title">Output</span>
+
+            <span class="status-badge" id="status-badge"></span>
+            <button class="btn-copy-output" id="btn-copy" type="button" title="Copy output" style="display:none;">📋 Copy</button>
+          </div>
+
+          <!-- Loading state -->
+          <div class="output-loading" id="output-loading" style="display:none;">
+            <div class="spinner"></div>
+            <span>Running code…</span>
+          </div>
+
+          <!-- Output sections -->
+          <div class="output-body" id="output-body">
+
+            <div class="output-section" id="section-empty">
+              <div class="output-empty">
+                <div class="output-empty-icon">▶</div>
+                <div class="output-empty-text">Click Run Code to execute your program</div>
+              </div>
+            </div>
+
+            <div class="output-section" id="section-compile" style="display:none;">
+              <div class="output-section-label label-error">⚠ Compilation Error</div>
+              <pre class="output-pre pre-error" id="compile-out"></pre>
+            </div>
+
+            <div class="output-section" id="section-stdout" style="display:none;">
+              <div class="output-section-label label-success">✓ Output</div>
+              <pre class="output-pre pre-success" id="stdout-out"></pre>
+            </div>
+
+            <div class="output-section" id="section-stderr" style="display:none;">
+              <div class="output-section-label label-error">✗ Errors / Warnings</div>
+              <pre class="output-pre pre-error" id="stderr-out"></pre>
+            </div>
+
+          </div><!-- /output-body -->
+
+        </div><!-- /output-panel -->
+
+      </div><!-- /editor-layout -->
+    </main>
+
+    <script>
+    // ── Language → starter template ───────────────────────────────────────
+    const STARTERS = {
+      python:     '# Python 3\nprint("Hello, World!")\n',
+      cpp:        '#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}\n',
+      c:          '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}\n',
+      java:       'class main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}\n',
+      javascript: '// JavaScript (Node.js)\nconsole.log("Hello, World!");\n',
+      typescript: '// TypeScript\nconst msg: string = "Hello, World!";\nconsole.log(msg);\n',
+      rust:       'fn main() {\n    println!("Hello, World!");\n}\n',
+      go:         'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello, World!")\n}\n',
+      csharp:     'using System;\n\nclass main {\n    static void Main() {\n        Console.WriteLine("Hello, World!");\n    }\n}\n',
+      php:        '<?php\necho "Hello, World!\\n";\n',
+      ruby:       'puts "Hello, World!"\n',
+      swift:      'print("Hello, World!")\n',
+      kotlin:     'fun main() {\n    println("Hello, World!")\n}\n',
+      scala:      'object main extends App {\n    println("Hello, World!")\n}\n',     
+      haskell:    'main :: IO ()\nmain = putStrLn "Hello, World!"\n',
+      lua:        'print("Hello, World!")\n',
+      perl:       'print "Hello, World!\\n";\n',
+      r:          'cat("Hello, World!\\n")\n',
+    };
+
+    const editor     = document.getElementById("code-editor");
+    const lineNums   = document.getElementById("line-numbers");
+    const langSelect = document.getElementById("lang-select");
+    const stdinArea  = document.getElementById("stdin-area");
+    const runBtn     = document.getElementById("btn-run");
+    const clearBtn   = document.getElementById("btn-clear");
+    const copyBtn    = document.getElementById("btn-copy");
+    const statusBadge  = document.getElementById("status-badge");
+    const loadingEl    = document.getElementById("output-loading");
+    const outputBody   = document.getElementById("output-body");
+
+    const secEmpty   = document.getElementById("section-empty");
+    const secCompile = document.getElementById("section-compile");
+    const secStdout  = document.getElementById("section-stdout");
+    const secStderr  = document.getElementById("section-stderr");
+
+    const compileOut = document.getElementById("compile-out");
+    const stdoutOut  = document.getElementById("stdout-out");
+    const stderrOut  = document.getElementById("stderr-out");
+
+    const CSRF = "{{ csrf_token }}";
+    const RUN_URL = "{% url 'piston_run' %}";
+
+    // ── Load starter code when language changes ────────────────────────────
+    function loadStarter(lang) {
+      editor.value = STARTERS[lang] || "";
+      updateLines();
+    }
+    loadStarter(langSelect.value);
+    langSelect.addEventListener("change", () => loadStarter(langSelect.value));
+
+    // ── Line numbers ───────────────────────────────────────────────────────
+    function updateLines() {
+      const lines = editor.value.split("\n").length;
+      lineNums.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join("\n");
+    }
+    editor.addEventListener("input",  updateLines);
+    editor.addEventListener("scroll", () => { lineNums.scrollTop = editor.scrollTop; });
+
+    // ── Tab key support ────────────────────────────────────────────────────
+    editor.addEventListener("keydown", e => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const s = editor.selectionStart;
+        const end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, s) + "    " + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = s + 4;
+        updateLines();
+      }
+    });
+
+    // ── Clear ──────────────────────────────────────────────────────────────
+    clearBtn.addEventListener("click", () => {
+      editor.value = "";
+      updateLines();
+      editor.focus();
+    });
+
+    // ── Copy output ────────────────────────────────────────────────────────
+    copyBtn.addEventListener("click", () => {
+      const text = [stdoutOut.textContent, stderrOut.textContent, compileOut.textContent]
+        .filter(Boolean).join("\n").trim();
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = "✅ Copied";
+        setTimeout(() => { copyBtn.textContent = "📋 Copy"; }, 1500);
+      });
+    });
+
+    // ── Reset output UI ───────────────────────────────────────────────────
+    function resetOutput() {
+      secEmpty.style.display   = "none";
+      secCompile.style.display = "none";
+      secStdout.style.display  = "none";
+      secStderr.style.display  = "none";
+      copyBtn.style.display    = "none";
+      statusBadge.textContent  = "";
+      statusBadge.className    = "status-badge";
+      compileOut.textContent   = "";
+      stdoutOut.textContent    = "";
+      stderrOut.textContent    = "";
+    }
+
+    function setStatus(text, cls) {
+      statusBadge.textContent = text;
+      statusBadge.className   = "status-badge " + cls;
+    }
+
+    // ── Run ────────────────────────────────────────────────────────────────
+    runBtn.addEventListener("click", runCode);
+
+    // Ctrl/Cmd + Enter shortcut
+    editor.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        runCode();
+      }
+    });
+
+    async function runCode() {
+      const code = editor.value.trim();
+      if (!code) { editor.focus(); return; }
+
+      // Loading state
+      runBtn.disabled = true;
+      runBtn.querySelector(".run-label").textContent = "Running…";
+      loadingEl.style.display  = "flex";
+      outputBody.style.display = "none";
+      resetOutput();
+
+      try {
+        const res = await fetch(RUN_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken":  CSRF,
+          },
+          body: JSON.stringify({
+            language:    langSelect.value,
+            source_code: editor.value,
+            stdin:       stdinArea.value,
+          }),
+        });
+
+        const data = await res.json();
+
+        loadingEl.style.display  = "none";
+        outputBody.style.display = "block";
+
+        if (data.error) {
+          secStderr.style.display = "block";
+          stderrOut.textContent   = data.error;
+          setStatus("Error", "badge-error");
+          return;
+        }
+
+        let hasOutput = false;
+
+        // Compile error
+        if (data.compile && data.compile.trim()) {
+          secCompile.style.display = "block";
+          compileOut.textContent   = data.compile;
+          setStatus("Compilation Error", "badge-error");
+          hasOutput = true;
+        }
+
+        // stdout
+        if (data.stdout && data.stdout.trim()) {
+          secStdout.style.display = "block";
+          stdoutOut.textContent   = data.stdout;
+          if (!data.compile) setStatus("Success", "badge-success");
+          hasOutput = true;
+        }
+
+        // stderr
+        if (data.stderr && data.stderr.trim()) {
+          secStderr.style.display = "block";
+          stderrOut.textContent   = data.stderr;
+          if (!data.compile) setStatus("Runtime Error", "badge-error");
+          hasOutput = true;
+        }
+
+        // No output at all
+        if (!hasOutput) {
+          secStdout.style.display = "block";
+          stdoutOut.textContent   = "(no output)";
+          setStatus(data.code === 0 ? "Success" : "Exited: " + data.code,
+                    data.code === 0 ? "badge-success" : "badge-error");
+        }
+
+        if (hasOutput) copyBtn.style.display = "inline-flex";
+
+      } catch (err) {
+        loadingEl.style.display  = "none";
+        outputBody.style.display = "block";
+        secStderr.style.display  = "block";
+        stderrOut.textContent    = "Network error: " + err.message;
+        setStatus("Error", "badge-error");
+      }
+
+      runBtn.disabled = false;
+      runBtn.querySelector(".run-label").textContent = "Run Code";
+    }
+    </script>
+
+  </body>
+</html>

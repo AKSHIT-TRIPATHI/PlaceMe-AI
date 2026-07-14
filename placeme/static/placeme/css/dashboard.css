@@ -1,0 +1,890 @@
+/* ============================================================
+   dashboard.css — PlaceMe AI Dashboard
+   Self-contained: no dependency on landing.css or any other sheet.
+   Shares the same visual language (theme vars, glass effects,
+   typography, button styles) as the rest of the app.
+   ============================================================ */
+
+/* --- Reset -------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Theme variables ---------------------------------------- */
+:root {
+  --bg-top: #5e696f;
+  --bg-bottom: #0a0a0c;
+}
+
+:root.theme-light {
+  --bg-top: #9f9fd8;
+  --bg-bottom: #3a3a45;
+}
+
+/* --- Base --------------------------------------------------- */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  color: #ffffff;
+  background-color: var(--bg-bottom);
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    var(--bg-top) 0%,
+    var(--bg-bottom) 100%
+  );
+  background-attachment: fixed;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* --- Topbar ------------------------------------------------- */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 80px;
+
+  /* fully transparent — no background on the bar itself */
+  background: transparent;
+  border-bottom: none;
+}
+
+/* --- Brand / Logo ------------------------------------------ */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 14px;
+  height: 14px;
+  background: #888888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0px 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+/* --- Center nav -------------------------------------------- */
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  /* true center horizontally, nudged down from the very top */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 1.1rem;
+
+  /* the glass stripe lives here only */
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 2rem;
+  padding: 0.3rem 0.4rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 2rem;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.11);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.14);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* --- Actions (right side) ---------------------------------- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* --- Theme toggle ------------------------------------------ */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  font-size: 1rem;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root.theme-light .theme-toggle {
+  border-color: rgba(11, 11, 15, 0.18);
+  color: rgba(11, 11, 15, 0.92);
+  background: rgba(11, 11, 15, 0.03);
+}
+
+/* --- Logout button ----------------------------------------- */
+.logout-form {
+  margin: 0;
+}
+
+.btn-logout {
+  padding: 0.5rem 1.1rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.18);
+}
+
+:root.theme-light .btn-logout {
+  background: rgba(11, 11, 15, 0.04);
+  border-color: rgba(11, 11, 15, 0.18);
+  box-shadow: 0 0 18px rgba(11, 11, 15, 0.10);
+  color: #ffffff;
+}
+
+:root.theme-light .btn-logout:hover {
+  background: rgba(11, 11, 15, 0.07);
+  box-shadow: 0 0 24px rgba(11, 11, 15, 0.16);
+}
+
+/* --- Main content ------------------------------------------ */
+.main-content {
+  padding-top: 80px; /* clear the fixed topbar */
+}
+
+/* --- Welcome section --------------------------------------- */
+.welcome-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5rem 2.5rem 6rem;
+}
+
+.welcome-kicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.40);
+  margin-bottom: 1.1rem;
+}
+
+.welcome-headline {
+  font-size: 3.4rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.dual-tone {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.50) 55%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.welcome-sub {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.50);
+  line-height: 1.65;
+  max-width: 540px;
+  margin-bottom: 3rem;
+}
+
+/* --- Quick action cards ------------------------------------ */
+.quick-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.quick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.6rem 1.5rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.40);
+}
+
+.quick-card-icon {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.quick-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.quick-card-body {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.48);
+  line-height: 1.55;
+}
+
+@media (max-width: 800px) {
+  .quick-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-headline {
+    font-size: 2.4rem;
+  }
+
+  .welcome-wrap {
+    padding: 3.5rem 1.5rem 5rem;
+  }
+}
+
+/* --- Responsive -------------------------------------------- */
+@media (max-width: 1100px) {
+  .nav-label {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 0.5rem 0.65rem;
+    gap: 0;
+  }
+
+  .nav-icon {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    padding: 0 1.25rem;
+  }
+
+  .brand-text {
+    display: none;
+  }
+}
+
+/* ================================================================
+   PlaceMe Resume Tile
+   ================================================================ */
+
+/* ── Outer tile wrapper ──────────────────────────────────────── */
+.resume-tile {
+  margin-top: 2.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.6rem;
+  padding: 1.8rem 2rem 2rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* ── Tile header row ─────────────────────────────────────────── */
+.resume-tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.6rem;
+}
+
+.resume-tile-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.btn-update-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-decoration: none;
+  transition: background 0.18s, box-shadow 0.18s, color 0.18s;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
+}
+
+.btn-update-resume:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.14);
+}
+
+/* ── Resume paper ────────────────────────────────────────────── */
+.resume-paper {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.2rem;
+  padding: 2.2rem 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Resume header block (name + contact) ────────────────────── */
+.rp-header {
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  margin-bottom: 1.4rem;
+  text-align: center;
+}
+
+.rp-name {
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+}
+
+.rp-headline {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+  margin-bottom: 0.85rem;
+}
+
+.rp-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1rem;
+  font-size: 0.80rem;
+}
+
+.rp-contact-item {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.rp-contact-link {
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.rp-contact-link:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.70);
+}
+
+/* ── Section block ───────────────────────────────────────────── */
+.rp-section {
+  padding-bottom: 1.3rem;
+  margin-bottom: 1.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rp-section:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.rp-section-title {
+  font-size: 0.70rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.85rem;
+}
+
+.rp-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* ── Skill chips ─────────────────────────────────────────────── */
+.rp-skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.rp-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Entry row (education / project / internship) ────────────── */
+.rp-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rp-entry-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.rp-entry-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rp-entry-at {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.rp-entry-period {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.40);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rp-entry-sub {
+  font-size: 0.80rem;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.rp-entry-skills {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+}
+
+.rp-entry-desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.50);
+  line-height: 1.55;
+  margin-top: 0.15rem;
+}
+
+/* ── Empty state text ────────────────────────────────────────── */
+.rp-empty {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.28);
+  font-style: italic;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .resume-paper {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .rp-entry-top {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .rp-contact-row {
+    gap: 0.3rem 0.75rem;
+  }
+}
+
+/* ================================================================
+   Share Your Experience Tile
+   ================================================================ */
+
+.experience-tile {
+  margin-top: 2.5rem;
+  background: linear-gradient(180deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.02) 100%);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 1.6rem;
+  padding: 2.8rem 2.4rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.10);
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+/* ── Left info panel ─────────────────────────────────────────── */
+.exp-info-panel {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.exp-kicker {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-weight: 800;
+  color: rgba(255,255,255,.38);
+}
+
+.exp-title {
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1.15;
+  color: #fff;
+  margin: 0;
+}
+
+.exp-body {
+  font-size: .92rem;
+  color: rgba(255,255,255,.48);
+  line-height: 1.65;
+}
+
+.exp-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+}
+
+.exp-detail-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-top: .1rem;
+  flex-shrink: 0;
+}
+
+.exp-detail-label {
+  font-size: .78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.6);
+  margin-bottom: .15rem;
+}
+
+.exp-detail-value {
+  font-size: .80rem;
+  color: rgba(255,255,255,.35);
+  line-height: 1.5;
+}
+
+/* ── Right form column ───────────────────────────────────────── */
+.exp-form-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.exp-glass-card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 1.3rem;
+  padding: 2rem 2rem 2rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.exp-form-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1.4rem;
+  letter-spacing: -.01em;
+}
+
+/* ── Fields ──────────────────────────────────────────────────── */
+.exp-field {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  margin-bottom: 1.1rem;
+}
+
+.exp-label {
+  font-size: .78rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .02em;
+}
+
+.exp-label-opt {
+  font-weight: 400;
+  color: rgba(255,255,255,.28);
+}
+
+.exp-input {
+  width: 100%;
+  padding: .7rem 1rem;
+  border-radius: .8rem;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-size: .9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .18s, background .18s;
+}
+
+.exp-input::placeholder { color: rgba(255,255,255,.25); }
+
+.exp-input:focus {
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.09);
+}
+
+.exp-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+/* ── Error ───────────────────────────────────────────────────── */
+.exp-field-error {
+  font-size: .82rem;
+  color: #fca5a5;
+  background: rgba(255,80,80,.08);
+  border: 1px solid rgba(255,80,80,.18);
+  border-radius: .6rem;
+  padding: .55rem .9rem;
+  margin-bottom: .9rem;
+}
+
+/* ── Submit button ───────────────────────────────────────────── */
+.exp-btn-submit {
+  width: 100%;
+  padding: .75rem 1.5rem;
+  border-radius: 1rem;
+  border: none;
+  background: rgba(255,255,255,.92);
+  color: #0a0a0c;
+  font-size: .92rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: -.01em;
+  transition: opacity .18s, box-shadow .18s;
+  box-shadow: 0 0 22px rgba(255,255,255,.18);
+  outline: none;
+}
+
+.exp-btn-submit:hover { opacity: .88; box-shadow: 0 0 32px rgba(255,255,255,.26); }
+.exp-btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Success state ───────────────────────────────────────────── */
+.exp-success {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0;
+  gap: .65rem;
+}
+
+.exp-success-icon  { font-size: 2.4rem; line-height: 1; }
+.exp-success-title { font-size: 1.2rem; font-weight: 900; color: #fff; }
+.exp-success-body  { font-size: .88rem; color: rgba(255,255,255,.45); line-height: 1.6; max-width: 280px; }
+
+.exp-btn-another {
+  margin-top: .5rem;
+  padding: .5rem 1.4rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.75);
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: background .18s, color .18s;
+}
+.exp-btn-another:hover { background: rgba(255,255,255,.11); color: #fff; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .experience-tile {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+  }
+  .exp-info-panel { flex: none; width: 100%; }
+  .exp-title { font-size: 1.5rem; }
+}
+
+/* ── Site Footer ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.01em;
+}
+
+.footer-brand .footer-dot {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+}
+
+.footer-copy {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.30);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.40);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.footer-link:hover {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+@media (max-width: 700px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    gap: 0.5rem;
+  }
+}

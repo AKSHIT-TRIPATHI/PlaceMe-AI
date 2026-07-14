@@ -1,0 +1,522 @@
+/* ============================================================
+   signup.css — PlaceMe AI Sign Up page
+   Fully self-contained. No dependency on landing.css or any
+   other stylesheet. Same visual language as the rest of the app.
+   ============================================================ */
+
+/* --- Reset -------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Theme variables ---------------------------------------- */
+:root {
+  --bg-top: #5e696f;
+  --bg-bottom: #0a0a0c;
+}
+
+:root.theme-light {
+  --bg-top: #9f9fd8;
+  --bg-bottom: #3a3a45;
+}
+
+/* --- Base --------------------------------------------------- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  color: #ffffff;
+  background-color: var(--bg-bottom);
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    var(--bg-top) 0%,
+    var(--bg-bottom) 100%
+  );
+  background-attachment: fixed;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* --- Background decorative div (aria-hidden, no layout impact) --- */
+.bg {
+  display: none;
+}
+
+/* --- Topbar ------------------------------------------------- */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  width: 100%;
+}
+
+/* --- Brand / Logo ------------------------------------------ */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  width: 14px;
+  height: 14px;
+  background: #888888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0px 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* --- Buttons ----------------------------------------------- */
+.btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-signup-blur {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+}
+
+.btn-signup-blur:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.18);
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.3);
+}
+
+.btn-lg {
+  padding: 0.8rem 1.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* --- Theme toggle ------------------------------------------ */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+:root.theme-light .theme-toggle {
+  border-color: rgba(11, 11, 15, 0.18);
+  color: rgba(11, 11, 15, 0.92);
+  background: rgba(11, 11, 15, 0.03);
+}
+
+/* --- Container & Hero -------------------------------------- */
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8rem 4rem 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero {
+  max-width: 950px;
+}
+
+.headline {
+  font-size: 4.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.dual-tone {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.55) 55%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subhead {
+  font-size: 1.25rem;
+  color: #a1a1aa;
+  margin-bottom: 3.5rem;
+  max-width: 700px;
+}
+
+/* --- Glass card -------------------------------------------- */
+.glass-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* --- Link -------------------------------------------------- */
+.link {
+  color: #a1a1aa;
+  font-size: 1.05rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #ffffff;
+}
+
+/* --- Auth form --------------------------------------------- */
+.auth-form {
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+  position: relative;
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.30);
+  margin-top: 0.35rem;
+  letter-spacing: 0.01em;
+}
+
+.label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 650;
+}
+
+.input {
+  width: 100%;
+  border-radius: 1.2rem;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  outline: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 35px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* When an eye button is present, pad right so text doesn't slide under it */
+.input.has-eye {
+  padding-right: 2.8rem;
+}
+
+/* OTP input — centered, larger font for 4-digit code */
+.input.otp-input {
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.4em;
+  font-weight: 700;
+  padding-left: 0.8rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.input.otp-input::placeholder {
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+/* Eye toggle — sits inside the field, pinned to bottom-right of input */
+.eye-toggle {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.18s;
+  user-select: none;
+}
+
+.eye-toggle:hover { color: rgba(255, 255, 255, 0.85); }
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.input:focus {
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 45px rgba(0, 0, 0, 0.45),
+    0 0 0 4px rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
+}
+
+.form-errors {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.form-errors ul {
+  margin: 0.5rem 0 0 1rem;
+  color: #a1a1aa;
+}
+
+.faq-q {
+  font-weight: 850;
+  margin-bottom: 0.6rem;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 1.1rem;
+}
+
+.auth-actions .link {
+  display: inline-block;
+  margin-top: 0.15rem;
+}
+
+/* --- Final CTA block --------------------------------------- */
+.final-cta {
+  margin-top: 4.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.7rem;
+  padding: 2rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+.final-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.final-cta-copy {
+  width: 100%;
+  max-width: 560px;
+}
+
+.final-cta-kicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.final-cta-title {
+  font-size: 2rem;
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  margin-bottom: 0.9rem;
+}
+
+.final-cta-subtitle {
+  color: #a1a1aa;
+  font-size: 1.05rem;
+  max-width: 650px;
+}
+
+/* --- Light theme overrides --------------------------------- */
+:root.theme-light .btn-ghost:hover {
+  background: rgba(11, 11, 15, 0.06);
+}
+
+:root.theme-light .btn-signup-blur {
+  background: rgba(11, 11, 15, 0.04);
+  border-color: rgba(11, 11, 15, 0.18);
+  box-shadow: 0 0 18px rgba(11, 11, 15, 0.10);
+}
+
+:root.theme-light .btn-signup-blur:hover {
+  background: rgba(11, 11, 15, 0.07);
+  box-shadow: 0 0 24px rgba(11, 11, 15, 0.16);
+}
+
+/* --- Responsive -------------------------------------------- */
+@media (max-width: 900px) {
+  .headline {
+    font-size: 3rem;
+  }
+
+  .container {
+    padding: 7rem 2rem 4rem;
+  }
+
+  .topbar {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .final-cta-inner {
+    flex-direction: column;
+  }
+}
+
+/* ── Site Footer ──────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.01em;
+}
+
+.footer-brand .footer-dot {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35);
+}
+
+.footer-copy {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.30);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-link {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.40);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.footer-link:hover {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+@media (max-width: 700px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    gap: 0.5rem;
+  }
+}
